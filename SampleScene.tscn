@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://boirolhtx23x0"]
+[gd_scene load_steps=35 format=3 uid="uid://boirolhtx23x0"]
 
 [ext_resource type="Material" uid="uid://cf5yq4x0wcvie" path="res://water_material.tres" id="2_k5fsd"]
 [ext_resource type="Script" path="res://scripts/floating_box.gd" id="3_nx0bj"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://u1pdrd2gf4aj" path="res://textures/n_noise_2.tres" id="7_p0c47"]
 [ext_resource type="Texture2D" uid="uid://dcock3ipexjw7" path="res://textures/u_w_noise.tres" id="8_3gy2h"]
 [ext_resource type="Script" path="res://scripts/water-manager.gd" id="9_4qvyo"]
+[ext_resource type="Script" path="res://scripts/buoyancy.gd" id="10_ynl6c"]
 
 [sub_resource type="Environment" id="Environment_18f0k"]
 background_mode = 1
@@ -109,8 +110,8 @@ shader_parameter/wave_color_range = 2.0
 shader_parameter/enable_fake_lighting = true
 shader_parameter/shine_strength = 0.178
 shader_parameter/shine_shininess = 16.426
-shader_parameter/shadow = 0.711
-shader_parameter/shadow_width = 0.13
+shader_parameter/shadow = 0.956
+shader_parameter/shadow_width = 0.183
 shader_parameter/shadow_color = Color(0.705, 0.705, 0.705, 0.705)
 shader_parameter/_specular_smoothness = 0.199
 shader_parameter/_specular_strength = 0.076
@@ -146,11 +147,18 @@ color_ramp = SubResource("Gradient_up7tb")
 noise = SubResource("FastNoiseLite_5u7t6")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oawqt"]
+cull_mode = 2
 shading_mode = 0
 albedo_texture = SubResource("GradientTexture2D_1mwl7")
 detail_enabled = true
 detail_blend_mode = 2
 detail_albedo = SubResource("NoiseTexture2D_e1g60")
+
+[sub_resource type="BoxMesh" id="BoxMesh_iee03"]
+size = Vector3(4, 1, 6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ywqou"]
+size = Vector3(4, 1, 6)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xcn30"]
 
@@ -195,8 +203,13 @@ light_color = Color(0, 0.504167, 0.55, 1)
 light_energy = 0.238
 light_indirect_energy = 0.0
 
+[node name="Camera3D2" type="Camera3D" parent="."]
+transform = Transform3D(-0.333807, 0.666548, -0.666548, 0, 0.707107, 0.707107, 0.942641, 0.236037, -0.236037, -12.58, 10.12, -6.69)
+cull_mask = 1048573
+current = true
+
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.71934, 0.388448, -0.575898, 0, 0.829038, 0.559193, 0.694658, -0.40225, 0.59636, -10.48, 6.42, 10.82)
+transform = Transform3D(0.71934, 0.388448, -0.575898, 0, 0.829038, 0.559193, 0.694658, -0.40225, 0.59636, -10.765, 6.42, 10.82)
 cull_mask = 1048573
 
 [node name="Water-Realistic" type="MeshInstance3D" parent="."]
@@ -214,7 +227,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -68, 0
 mesh = SubResource("QuadMesh_ynkkp")
 surface_material_override/0 = SubResource("ShaderMaterial_ljyol")
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
+[node name="Floating-Box" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.99561, 0.323155, 4.97299)
 mass = 4.0
 can_sleep = false
@@ -223,19 +236,19 @@ angular_damp = 4.0
 script = ExtResource("3_nx0bj")
 buoyancy_power = 4.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floating-Box"]
 mesh = SubResource("BoxMesh_8etm5")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floating-Box"]
 shape = SubResource("BoxShape3D_4x3de")
 
-[node name="Foam" type="MeshInstance3D" parent="RigidBody3D"]
-transform = Transform3D(3.78942, 0, 0, 0, 4.96923e-07, 3.78942, 0, -3.78942, 4.96923e-07, 0, -8.65195, -1.13457e-06)
+[node name="Foam" type="MeshInstance3D" parent="Floating-Box"]
+transform = Transform3D(3.78942, 0, 0, 0, 4.96923e-07, 3.78942, 0, -3.78942, 4.96923e-07, 0, -0.0254898, -3.34501e-09)
 layers = 2
 mesh = SubResource("QuadMesh_ujoja")
 surface_material_override/0 = SubResource("StandardMaterial3D_oawqt")
 
-[node name="RigidBody3D2" type="RigidBody3D" parent="."]
+[node name="Floating-Box2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.03607, 0.323155, 9.88764)
 mass = 4.0
 can_sleep = false
@@ -245,17 +258,52 @@ constant_force = Vector3(8, 0, 0)
 script = ExtResource("3_nx0bj")
 buoyancy_power = 4.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D2"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floating-Box2"]
 mesh = SubResource("BoxMesh_8etm5")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D2"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floating-Box2"]
 shape = SubResource("BoxShape3D_4x3de")
 
-[node name="Foam" type="MeshInstance3D" parent="RigidBody3D2"]
-transform = Transform3D(3.78942, 0, 0, 0, 4.96923e-07, 3.78942, 0, -3.78942, 4.96923e-07, 0, -4.59614, -6.02712e-07)
+[node name="Foam" type="MeshInstance3D" parent="Floating-Box2"]
+transform = Transform3D(3.78942, 0, 0, 0, 4.96923e-07, 3.78942, 0, -3.78942, 4.96923e-07, 0, 0.0746331, 9.78667e-09)
 layers = 2
 mesh = SubResource("QuadMesh_ujoja")
 surface_material_override/0 = SubResource("StandardMaterial3D_oawqt")
+
+[node name="RigidBody3D3" type="RigidBody3D" parent="." node_paths=PackedStringArray("points_array")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.388946, 0.323155, -10.079)
+mass = 4.0
+can_sleep = false
+linear_damp = 4.0
+angular_damp = 4.0
+script = ExtResource("10_ynl6c")
+archimedes_force = 20.0
+points_array = [NodePath("TR"), NodePath("TL"), NodePath("BL"), NodePath("BR")]
+min_max_rotation = Vector3(1, 1, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D3"]
+mesh = SubResource("BoxMesh_iee03")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D3"]
+shape = SubResource("BoxShape3D_ywqou")
+
+[node name="Foam" type="MeshInstance3D" parent="RigidBody3D3"]
+transform = Transform3D(7.99961, 0, 0, 0, 1.2904e-06, 3.78942, 0, -9.84027, 4.96923e-07, 0, 0.0329, 4.31193e-09)
+layers = 2
+mesh = SubResource("QuadMesh_ujoja")
+surface_material_override/0 = SubResource("StandardMaterial3D_oawqt")
+
+[node name="TR" type="Marker3D" parent="RigidBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -3)
+
+[node name="TL" type="Marker3D" parent="RigidBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -3)
+
+[node name="BL" type="Marker3D" parent="RigidBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 3)
+
+[node name="BR" type="Marker3D" parent="RigidBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 3)
 
 [node name="Props" type="Node3D" parent="."]
 
@@ -267,7 +315,7 @@ size = Vector3(1, 2.74658, 1)
 transform = Transform3D(2.73308, 0, 0, 0, 8.36266e-07, 2.73308, 0, -2.73308, 8.36266e-07, 0, -2.5747, -7.87806e-07)
 layers = 2
 mesh = SubResource("QuadMesh_ujoja")
-skeleton = NodePath("../../../RigidBody3D/Foam")
+skeleton = NodePath("../../../Floating-Box/Foam")
 surface_material_override/0 = SubResource("StandardMaterial3D_oawqt")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="Props"]
