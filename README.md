@@ -9,8 +9,10 @@ Features:
 
 ## Images
 
-![Image2](https://taillight-games.github.io/portfolio/images/ocean/ocean-beach-1.gif)
-![Image1](https://taillight-games.github.io/portfolio/images/ocean/ocean-close-up.gif)
+![ocean-beach-1](https://github.com/user-attachments/assets/b0f01c26-6a94-4d19-9c83-203ab489e7cc)
+
+![oean-4](https://github.com/user-attachments/assets/613abd2c-3d9d-4634-980f-0fb424f303e3)
+
 ## Usage
 
 ### Vertex Waves
