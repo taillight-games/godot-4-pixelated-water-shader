@@ -319,8 +319,8 @@ group_uniforms lighting;
 // Inaccurate to real life but looks kinda cool
 uniform bool enable_fake_lighting = false; 
 
-uniform float specular_strength : hint_range(0.0f, 1.0f) = 0.17f;
-uniform float specular_shininess : hint_range(0.0f, 32.0f) = 18.0f;
+uniform float shine_strength : hint_range(0.0f, 1.0f) = 0.17f;
+uniform float shine_shininess : hint_range(0.0f, 32.0f) = 18.0f;
 
 uniform float shadow : hint_range(0.0, 1.0) = 0.72;
 uniform float shadow_width : hint_range(0.001, 0.5) = 0.18;
@@ -346,9 +346,9 @@ void light()
 		H = normalize(VIEW + LIGHT);
 	}
 		float NdotH = dot(NORMAL, H);
-		float specular_amount = max(pow(NdotH, specular_shininess*specular_shininess), 0.0f)
+		float specular_amount = max(pow(NdotH, shine_shininess * shine_shininess), 0.0f)
 								* ATTENUATION;
-	SPECULAR_LIGHT += specular_strength * specular_amount * LIGHT_COLOR;
+	SPECULAR_LIGHT += shine_strength * specular_amount * LIGHT_COLOR;
 		
 	float NdotL = dot(NORMAL, LIGHT) * ATTENUATION;
 	NdotL = smoothstep(shadow - shadow_width, shadow + shadow_width, NdotL);

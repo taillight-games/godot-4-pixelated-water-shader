@@ -1,11 +1,11 @@
 [gd_resource type="ShaderMaterial" load_steps=14 format=3 uid="uid://cf5yq4x0wcvie"]
 
 [ext_resource type="Shader" path="res://shaders/64-water-intense.gdshader" id="1_mpvtw"]
-[ext_resource type="Texture2D" uid="uid://ci7j403gsie1f" path="res://textures/water-gen/foam.tres" id="2_uu6du"]
-[ext_resource type="Texture2D" uid="uid://bnxoe68bx2aix" path="res://textures/water-gen/foam_w_noise.tres" id="3_ccant"]
-[ext_resource type="Texture2D" uid="uid://bv18iejdqadjt" path="res://textures/water-gen/n_noise_1.tres" id="4_sognf"]
-[ext_resource type="Texture2D" uid="uid://u1pdrd2gf4aj" path="res://textures/water-gen/n_noise_2.tres" id="5_12ghi"]
-[ext_resource type="Texture2D" uid="uid://dcock3ipexjw7" path="res://textures/water-gen/u_w_noise.tres" id="6_q5hsx"]
+[ext_resource type="Texture2D" uid="uid://ci7j403gsie1f" path="res://textures/foam.tres" id="2_uu6du"]
+[ext_resource type="Texture2D" uid="uid://bnxoe68bx2aix" path="res://textures/foam_w_noise.tres" id="3_ccant"]
+[ext_resource type="Texture2D" uid="uid://bv18iejdqadjt" path="res://textures/n_noise_1.tres" id="4_sognf"]
+[ext_resource type="Texture2D" uid="uid://u1pdrd2gf4aj" path="res://textures/n_noise_2.tres" id="5_12ghi"]
+[ext_resource type="Texture2D" uid="uid://dcock3ipexjw7" path="res://textures/u_w_noise.tres" id="6_q5hsx"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_fc3xh"]
 viewport_path = NodePath("FoamViewport")
@@ -68,7 +68,7 @@ shader_parameter/surface_bottom = Color(0.294118, 0.533333, 0.670588, 0.65098)
 shader_parameter/opacity = 0.96
 shader_parameter/opacity_floor = 0.14
 shader_parameter/opacity_ceiling = 1.0
-shader_parameter/roughness = 1.0
+shader_parameter/roughness = 0.17
 shader_parameter/height_scale = 1.0
 shader_parameter/amplitude1 = 2.0
 shader_parameter/amplitude2 = 0.2
@@ -87,20 +87,20 @@ shader_parameter/under_wobble_noise = ExtResource("6_q5hsx")
 shader_parameter/foam_color = Color(1, 1, 1, 1)
 shader_parameter/foam_mask_size = 51.2
 shader_parameter/foam_mask_offset = Vector2(0, 0)
-shader_parameter/foam_wobble = 0.01
+shader_parameter/foam_wobble = 0.05
 shader_parameter/foam_wobble_size = 10.0
 shader_parameter/foam = ExtResource("2_uu6du")
 shader_parameter/foam_mask = SubResource("ViewportTexture_fc3xh")
 shader_parameter/foam_wobble_noise = ExtResource("3_ccant")
-shader_parameter/high_color = Color(0.0470588, 0.611765, 0.701961, 1)
-shader_parameter/low_color = Color(0.0980392, 0.309804, 0.439216, 1)
+shader_parameter/high_color = Color(0, 0.540833, 0.59, 1)
+shader_parameter/low_color = Color(0, 0.232333, 0.34, 1)
 shader_parameter/wave_color_range = 2.0
 shader_parameter/enable_fake_lighting = false
-shader_parameter/specular_strength = 0.273
-shader_parameter/specular_shininess = 20.0
-shader_parameter/shadow = 0.695
-shader_parameter/shadow_width = 0.187
+shader_parameter/shine_strength = 0.17
+shader_parameter/shine_shininess = 18.0
+shader_parameter/shadow = 0.654
+shader_parameter/shadow_width = 0.13
 shader_parameter/shadow_color = Color(0.705, 0.705, 0.705, 0.705)
 shader_parameter/_specular_smoothness = 0.199
-shader_parameter/_specular_strength = 0.075
+shader_parameter/_specular_strength = 0.0
 shader_parameter/_glossiness = 0.067
