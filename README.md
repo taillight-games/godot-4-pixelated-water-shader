@@ -10,8 +10,8 @@ Features:
 ## Images
 
 ![ocean-beach-1](https://github.com/user-attachments/assets/b0f01c26-6a94-4d19-9c83-203ab489e7cc)
+![oean-42](https://github.com/user-attachments/assets/85a26307-c4fe-45e9-bb98-6bd45a26a233)
 
-![oean-4](https://github.com/user-attachments/assets/613abd2c-3d9d-4634-980f-0fb424f303e3)
 
 ## Usage
 
