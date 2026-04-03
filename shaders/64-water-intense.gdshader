@@ -4,7 +4,7 @@
 */
 
 shader_type spatial;
-render_mode cull_disabled, world_vertex_coords, depth_draw_always, ambient_light_disabled, diffuse_burley;
+render_mode cull_disabled, world_vertex_coords, depth_draw_never, ambient_light_disabled, diffuse_burley;
 
 // this must be set every frame in code for it to sync with the WaterManager
 // if you don't need the time to agree with your code, just replace instances of this with TIME
@@ -96,8 +96,8 @@ varying vec3 wave_color;
 
 uniform float wave_color_range = 2.0; // controls the power of the wave colors
 
-uniform sampler2D screen_texture : hint_screen_texture;
-uniform sampler2D depth_texture : hint_depth_texture;
+uniform sampler2D screen_texture : hint_screen_texture, filter_linear;
+uniform sampler2D depth_texture : hint_depth_texture, filter_nearest;
 
 vec2 round_to_pixel(vec2 i, int width)
 {
@@ -189,8 +189,6 @@ float wave(vec2 y, vec3 n) {
 	return s;
 }
 
-varying mat4 camera_mix;
-
 void vertex() {
 
 	npw = NODE_POSITION_WORLD;
@@ -218,7 +216,6 @@ void vertex() {
 	
 	v_color = COLOR.rgba;
 	
-	camera_mix = INV_VIEW_MATRIX;
 }
 
 void fragment() {
@@ -236,7 +233,7 @@ void fragment() {
 	// from: https://www.reddit.com/r/godot/comments/jpreaw/comment/gblb1ou/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
 	float depth3 = texture(depth_texture, SCREEN_UV + wobble_uv).x;
 	vec3 ndc3 = vec3(SCREEN_UV + wobble_uv, depth3) * 2.0 - 1.0;
-	vec4 world3 = camera_mix * INV_PROJECTION_MATRIX * vec4(ndc3, 1.0);
+	vec4 world3 = INV_VIEW_MATRIX * INV_PROJECTION_MATRIX * vec4(ndc3, 1.0);
 	vec3 world_position = world3.xyz / world3.w;
 
 	float vertex_y = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).y;
@@ -266,7 +263,9 @@ void fragment() {
 	
 	NORMAL_MAP = mix(n_map1, n_map2, 0.5);
 	
-	if(FRONT_FACING)
+	// Use VIEW dot NORMAL instead of FRONT_FACING — Vulkan and OpenGL disagree on winding order
+	bool is_top = dot(VIEW, NORMAL) > 0.0;
+	if(is_top)
 	{
 		_albedo = mix(under, deep, alpha_blend);
 		float _ALPHA = remap(0.0, opacity, opacity_floor, opacity_ceiling, pow(alpha_blend, edge_fade_power));
@@ -276,7 +275,7 @@ void fragment() {
 		NORMAL_MAP = mix(vec3(1.,1.,1.), vec3(0.,0.,0.), NORMAL_MAP);
 		vec3 over = texture(screen_texture, SCREEN_UV + wobble_uv).rgb;
 		_albedo = mix(over, surface_bottom.rgb, surface_bottom.a);
-		
+
 	}
 	ALBEDO = _albedo;
 
