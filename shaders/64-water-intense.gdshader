@@ -300,15 +300,13 @@ void fragment() {
 		foam_m = texture(foam_mask, (r_f_m)).r;
 	}
 	
-	if (foam_m > 0.01)
-	{
+
 		
-		vec2 wobble_uv2 = (texture(foam_wobble_noise, g_uv(rounded_uv / foam_wobble_size, caustic_speed, false, NODE_POSITION_WORLD)).xy) * foam_wobble;
-		vec3 f_map1 = texture(foam, g_uv(rounded_uv + wobble_uv2, normal_noise_speed, true, NODE_POSITION_WORLD)).xyz;
-		foam_power = foam_m * texture(foam, rounded_uv + wobble_uv2).a;
-		ALBEDO = mix(ALBEDO, f_map1, foam_power);
-	}
-	
+	vec2 wobble_uv2 = (texture(foam_wobble_noise, g_uv(rounded_uv / foam_wobble_size, caustic_speed, false, NODE_POSITION_WORLD)).xy) * foam_wobble;
+	vec3 f_map1 = texture(foam, g_uv(rounded_uv + wobble_uv2, normal_noise_speed, true, NODE_POSITION_WORLD)).xyz;
+	foam_power = foam_m * texture(foam, rounded_uv + wobble_uv2).a;
+	ALBEDO = mix(ALBEDO, f_map1, foam_power);
+
 }
 
 
@@ -371,4 +369,3 @@ void light()
 	DIFFUSE_LIGHT = mix(DIFFUSE_LIGHT, foam_color, foam_power);
 
 }
-
